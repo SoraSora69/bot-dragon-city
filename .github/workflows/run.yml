@@ -1,0 +1,46 @@
+name: Run DragonCity Bot
+on:
+  workflow_dispatch: # Giúp bạn có nút bấm kích hoạt chạy bằng tay
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: pip install requests
+
+    - name: Run Script
+      env:
+        MY_COOKIE: ${{ secrets.MY_COOKIE }}
+      run: |
+        cat << 'EOF' > bot.py
+        import time, requests, random, os
+        url = "https://gamemodshub.com/game/dragoncity/script/packet"
+        user_id = "3683704948416180353"
+        cookie = os.environ.get("MY_COOKIE")
+        session = requests.Session()
+        session.headers.update({"Cookie": cookie, "User-Agent": "Mozilla/5.0"})
+        dem = 0
+        while True:
+            try:
+                res = session.post(url, data={"user_id": user_id, "cmds": "auto-gold-and-xp-50k", "verify": "true"})
+                if "Success" in res.text:
+                    dem += 1
+                    print(f"Lượt {dem} thành công")
+                else:
+                    print(f"Lỗi: {res.text[:30]}")
+            except Exception as e:
+                print(f"Lỗi kết nối: {e}")
+                time.sleep(30)
+                continue
+            time.sleep(random.uniform(23, 25))
+        EOF
+        python bot.py
