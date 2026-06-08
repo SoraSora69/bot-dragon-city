@@ -1,6 +1,11 @@
 name: Run DragonCity Bot
 on:
   workflow_dispatch:
+    inputs:
+      cookie_input:
+        description: 'Nhập Cookie của bạn vào đây:'
+        required: true
+        type: string
 
 jobs:
   build:
@@ -19,7 +24,7 @@ jobs:
 
     - name: Run Script
       env:
-        MY_COOKIE: ${{ secrets.MY_COOKIE }}
+        MY_COOKIE: ${{ github.event.inputs.cookie_input }}
       run: |
         cat << 'EOF' > bot.py
         import time, requests, random, os
