@@ -1,6 +1,6 @@
 name: Run DragonCity Bot
 on:
-  workflow_dispatch: # Giúp bạn có nút bấm kích hoạt chạy bằng tay
+  workflow_dispatch:
 
 jobs:
   build:
@@ -34,11 +34,11 @@ jobs:
                 res = session.post(url, data={"user_id": user_id, "cmds": "auto-gold-and-xp-50k", "verify": "true"})
                 if "Success" in res.text:
                     dem += 1
-                    print(f"Lượt {dem} thành công")
+                    print(f"Lượt {dem} thành công", flush=True)
                 else:
-                    print(f"Lỗi: {res.text[:30]}")
+                    print(f"Lỗi: {res.text[:30]}", flush=True)
             except Exception as e:
-                print(f"Lỗi kết nối: {e}")
+                print(f"Lỗi kết nối: {e}", flush=True)
                 time.sleep(30)
                 continue
             time.sleep(random.uniform(23, 25))
