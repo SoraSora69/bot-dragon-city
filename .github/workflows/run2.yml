@@ -1,6 +1,11 @@
 name: Run DragonCity Bot Acc 2
 on:
   workflow_dispatch:
+    inputs:
+      cookie_input:
+        description: 'Nhập Cookie của Acc 2 vào đây:'
+        required: true
+        type: string
 
 jobs:
   build:
@@ -19,12 +24,12 @@ jobs:
 
     - name: Run Script
       env:
-        MY_COOKIE_2: ${{ secrets.MY_COOKIE_2 }}
+        MY_COOKIE_2: ${{ github.event.inputs.cookie_input }}
       run: |
         cat << 'EOF' > bot2.py
         import time, requests, random, os
         url = "https://gamemodshub.com/game/dragoncity/script/packet"
-        user_id = "3683704948416180353" # << ĐỔI THÀNH USER ID CỦA ACC 2 NẾU KHÁC ACC 1
+        user_id = "2a153b17f9c802225b9cf2854009f3c8"
         cookie = os.environ.get("MY_COOKIE_2")
         session = requests.Session()
         session.headers.update({"Cookie": cookie, "User-Agent": "Mozilla/5.0"})
