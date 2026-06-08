@@ -1,0 +1,46 @@
+name: Run DragonCity Bot Acc 2
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: pip install requests
+
+    - name: Run Script
+      env:
+        MY_COOKIE_2: ${{ secrets.MY_COOKIE_2 }}
+      run: |
+        cat << 'EOF' > bot2.py
+        import time, requests, random, os
+        url = "https://gamemodshub.com/game/dragoncity/script/packet"
+        user_id = "3683704948416180353" # << ĐỔI THÀNH USER ID CỦA ACC 2 NẾU KHÁC ACC 1
+        cookie = os.environ.get("MY_COOKIE_2")
+        session = requests.Session()
+        session.headers.update({"Cookie": cookie, "User-Agent": "Mozilla/5.0"})
+        dem = 0
+        while True:
+            try:
+                res = session.post(url, data={"user_id": user_id, "cmds": "auto-gold-and-xp-50k", "verify": "true"})
+                if "Success" in res.text:
+                    dem += 1
+                    print(f"Lượt {dem} thành công", flush=True)
+                else:
+                    print(f"Lỗi: {res.text[:30]}", flush=True)
+            except Exception as e:
+                print(f"Lỗi kết nối: {e}", flush=True)
+                time.sleep(30)
+                continue
+            time.sleep(random.uniform(23, 25))
+        EOF
+        python bot2.py
