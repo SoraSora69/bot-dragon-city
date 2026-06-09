@@ -1,9 +1,9 @@
-name: Run DragonCity Bot Acc 2
+name: Run DragonCity Bot
 on:
   workflow_dispatch:
     inputs:
       cookie_input:
-        description: 'Nhập Cookie của Acc 2 vào đây:'
+        description: 'Dán Cookie vào đây:'
         required: true
         type: string
 
@@ -24,28 +24,48 @@ jobs:
 
     - name: Run Script
       env:
-        MY_COOKIE_2: ${{ github.event.inputs.cookie_input }}
+        MY_COOKIE: ${{ github.event.inputs.cookie_input }}
       run: |
-        cat << 'EOF' > bot2.py
-        import time, requests, random, os
+        cat << 'EOF' > bot.py
+        import time, requests, random, os, re
+        
+        cookie = os.environ.get("MY_COOKIE")
+        # Tự động tìm ID GMH (DragonCityToolCode) trong Cookie
+        match = re.search(r'DragonCityToolCode=([^;]+)', cookie)
+        if match:
+            user_id = match.group(1)
+            print(f"Đã tự động tìm thấy ID GMH: {user_id}", flush=True)
+        else:
+            print("LỖI: Không tìm thấy ID GMH trong Cookie! Kiểm tra lại Cookie bạn dán.", flush=True)
+            exit(1)
+
         url = "https://gamemodshub.com/game/dragoncity/script/packet"
-        user_id = "2a153b17f9c802225b9cf2854009f3c8"
-        cookie = os.environ.get("MY_COOKIE_2")
         session = requests.Session()
         session.headers.update({"Cookie": cookie, "User-Agent": "Mozilla/5.0"})
+        
         dem = 0
+        loi_lien_tiep = 0
+        
         while True:
+            if loi_lien_tiep >= 10:
+                print("Bot dừng do lỗi liên tiếp quá 10 lần!", flush=True)
+                break
+                
             try:
                 res = session.post(url, data={"user_id": user_id, "cmds": "auto-gold-and-xp-50k", "verify": "true"})
                 if "Success" in res.text:
                     dem += 1
+                    loi_lien_tiep = 0
                     print(f"Lượt {dem} thành công", flush=True)
                 else:
-                    print(f"Lỗi: {res.text[:30]}", flush=True)
+                    loi_lien_tiep += 1
+                    print(f"Lỗi (Lần {loi_lien_tiep}/10): {res.text[:30]}", flush=True)
             except Exception as e:
-                print(f"Lỗi kết nối: {e}", flush=True)
-                time.sleep(30)
+                loi_lien_tiep += 1
+                print(f"Lỗi kết nối (Lần {loi_lien_tiep}/10): {e}", flush=True)
+                time.sleep(20)
                 continue
-            time.sleep(random.uniform(23, 25))
+                
+            time.sleep(random.uniform(14, 15))
         EOF
-        python bot2.py
+        python bot.py
