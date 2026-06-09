@@ -1,4 +1,4 @@
-name: Run DragonCity Bot
+name: Run DragonCity Bot 2
 on:
   workflow_dispatch:
     inputs:
