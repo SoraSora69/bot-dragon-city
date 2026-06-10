@@ -47,8 +47,8 @@ jobs:
         loi_lien_tiep = 0
         
         while True:
-            if loi_lien_tiep >= 10:
-                print("Bot dừng do lỗi liên tiếp quá 10 lần!", flush=True)
+            if loi_lien_tiep >= 5:
+                print("Bot dừng do lỗi liên tiếp quá 5 lần!", flush=True)
                 break
                 
             try:
