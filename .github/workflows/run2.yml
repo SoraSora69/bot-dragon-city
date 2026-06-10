@@ -1,4 +1,4 @@
-name: Run DragonCity Bot 2
+name: Run DragonCity Tools Gold And Exp
 on:
   workflow_dispatch:
     inputs:
