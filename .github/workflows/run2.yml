@@ -34,7 +34,7 @@ jobs:
         match = re.search(r'DragonCityToolCode=([^;]+)', cookie)
         if match:
             user_id = match.group(1)
-            print(f"Đã tự động tìm thấy ID GMH: {user_id}", flush=True)
+            print(f"ID Gamemodshub của bạn: {user_id}", flush=True)
         else:
             print("LỖI: Không tìm thấy ID GMH trong Cookie! Kiểm tra lại Cookie bạn dán.", flush=True)
             exit(1)
